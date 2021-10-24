@@ -1,21 +1,23 @@
 package com.findwise.util;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.findwise.IndexEntry;
-import com.findwise.model.Document;
-import com.findwise.model.Word;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 public class DocumentParser {
 
   private DocumentParser() {}
 
+  /**
+   * Get document content from resource
+   * @param name The full name of the .txt document, including extension
+   * @return Content as a string
+   */
   public static String getDocumentContentByName(String name) {
     try(InputStream is = Objects.requireNonNull(
         Thread.currentThread().getContextClassLoader().getResourceAsStream(name))
@@ -27,11 +29,13 @@ public class DocumentParser {
     }
   }
 
-  public static List<Word> parseContent(String content) {
-    List<Word> words = new LinkedList<>();
-    for (String word: content.split("[\\s\\n]*")) {
-      words.add(new Word(word));
-    }
-    return words;
+  /**
+   * Creates list of split words by the space or new line special symbol
+   * @param content String that represents content
+   * @return Tokens as strings
+   */
+  public static List<String> tokenizeContent(String content) {
+    return new LinkedList<>(Arrays.asList(content.toLowerCase(Locale.ROOT).split("[\\s\\n]+"))
+    );
   }
 }
